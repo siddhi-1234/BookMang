@@ -235,6 +235,77 @@ app.put("/users/:id",(req,res)=>{
         });
     });
 
+    // Create/add new book
+    /*
+    *Routers:/books
+    *Method:POST
+    *Description:Creating new book
+    *Access:Public
+    *Parameters:None
+    */
+
+app.post("/books",(req,res)=>{
+    const{id,name,author,genre,price,publisher}=req.body;
+    const book=books.find((each)=>each.id===id);  /*checking whether id exist or not*/
+    if(book){
+        return res.status(404).json({
+            success:false,
+            message:"book with ID exists",
+});
+    }
+    books.push({
+        id,
+        name,
+        author,
+        genre,
+        price,
+        publisher,
+    });
+    return res.status(201).json({
+        success:true,
+        message:"book added successfully",
+        data:books,
+    });
+});
+
+// Update book by their id
+/*
+*Routers:/books/:id
+*Method:PUT
+*Description:Updating book by id
+*Access:Public
+*Parameters:id
+*/
+
+app.put("/books/:id",(req,res)=>{
+    const {id}=req.params;
+    const {data}=req.body;
+    const book=books.find((each)=>each.id===id);  /*checking whether id exist or not*/
+    if(!book){
+        return res.status(404).json({
+            success:false,
+            message:"book doesn't exists",
+});
+    }
+    const updateBookData=books.map((each)=>{
+        if(each.id===id){
+            return{
+                ...each,
+                ...data,
+            };
+        }
+        return each;
+    });
+    return res.status(200).json({
+        success:true,
+        message:"book updated!",
+        data:updateBookData,
+    });
+});
+
+
+
+
 
 
 app.get("*",(req,res)=>{
