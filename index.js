@@ -1,9 +1,17 @@
 const express=require("express");
+const dotenv=require("dotenv");
+
+const DbConnection=require("./databaseConnection");
 
 const {users}=require("./data/users.json");
 const {books}=require("./data/books.json");
 
+dotenv.config();
+
+
 const app=express();
+
+DbConnection();
 
 const PORT=8081;
 
