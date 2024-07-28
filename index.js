@@ -304,6 +304,48 @@ app.put("/books/:id",(req,res)=>{
 });
 
 
+    // Get user subscription details
+    /*
+    *Routers:/users/subscription-details/:id
+    *Method:GET
+    *Description:Get all user subscription details
+    *Access:Public
+    *Parameters:id
+    */
+
+    app.get("/users/subscription-details/:id",(req,res)=>{
+        const {id}=req.params;
+        const user=users.find((each)=>each.id===id);
+        if(!user){
+            return res.status(404).json({
+                success:false,
+                message:"User with id don't exist",
+            });
+        }
+        const getDateInDays=(data="")=>{
+            let date;
+            if(data===""){              /*if data is blank then consider current date*/
+                date=new Date();
+            }else{                       /*if data is passed then pass it to date variable*/
+                date=new Date(data);
+            }
+            let days=Math.floor(data/(1000*60*60*24));        /*to cal days using floor func to divide it*/
+            return days;
+        };
+        const subscriptionType=(date)=>{
+            if((user.subscriptionType="Basic")){
+                date=date+90;                               /*3 mon=30*3*/
+            }else if((user.subscriptionType="Standard")){
+                date=date+180;                              /*6 mon=30*6*/
+            }else if((user.subscriptionType="Premium")){
+                date=date+365;                              /*12 mon=30*12*/
+            }
+            return date;
+        }
+    });
+
+
+
 
 
 
