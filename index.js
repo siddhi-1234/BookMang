@@ -329,19 +329,36 @@ app.put("/books/:id",(req,res)=>{
             }else{                       /*if data is passed then pass it to date variable*/
                 date=new Date(data);
             }
-            let days=Math.floor(data/(1000*60*60*24));        /*to cal days using floor func to divide it*/
+            let days=Math.floor(date/(1000*60*60*24));        /*to cal days using floor func to divide it
+                                                                 calculated from Jan 1 1970 UTC*/
             return days;
         };
         const subscriptionType=(date)=>{
-            if((user.subscriptionType="Basic")){
+            if((user.subscriptionType==="Basic")){
                 date=date+90;                               /*3 mon=30*3*/
-            }else if((user.subscriptionType="Standard")){
+            }else if((user.subscriptionType==="Standard")){
                 date=date+180;                              /*6 mon=30*6*/
-            }else if((user.subscriptionType="Premium")){
+            }else if((user.subscriptionType==="Premium")){
                 date=date+365;                              /*12 mon=30*12*/
             }
             return date;
-        }
+        };
+        let returnDate=getDateInDays(user.returnDate);
+        let currentDate=getDateInDays();
+        let subscriptionDate=getDateInDays(user.subscriptionDate);
+        let subscriptionExpiration=subscriptionType(subscriptionDate);
+
+        const data={
+            ...user,
+            isSubscriptionExpired:subscriptionExpiration<=currentDate,
+            daysLeftForExpiration:subscriptionExpiration<=currentDate?0:subscriptionExpiration-currentDate,
+            fine:returnDate<currentDate?subscriptionExpiration<=currentDate?100:50:0,
+        };
+        return res.status(200).json({
+            success:true,
+            message:"Subscription detail for user is:",
+            data,
+        });
     });
 
 
