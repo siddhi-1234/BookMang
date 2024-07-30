@@ -1,6 +1,6 @@
 const express=require("express");
 
-const{getAllUsers,getSingleUserById,deleteUser,updateUserData,createNewUser}=require("../controllers/user-controller");
+const{getAllUsers,getSingleUserById,deleteUser,updateUserData}=require("../controllers/user-controller");
 
 const {users}=require("../data/users.json");
 
@@ -44,7 +44,7 @@ router.get("/:id",getSingleUserById);
 *Parameters:None
 */
 
-router.post("/",createNewUser);
+// router.post("/",createNewUser);
 
 // Update user by their id
 /*
